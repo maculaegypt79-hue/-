@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>سلمنا فسرنا نحمل | حجز التذاكر</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+:root{--bg:#080706;--card:#12100e;--card2:#191512;--gold:#d6ad62;--gold2:#f0d49a;--muted:#aaa096;--line:#33281d;--red:#7b2929;--green:#3d785b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 50% -10%,#3a2411 0,#0b0907 34%,#080706 70%);color:#f6efe5;font-family:Cairo,Arial,sans-serif}.hidden{display:none!important}
+.topbar{position:sticky;top:0;z-index:20;background:#090807d9;backdrop-filter:blur(15px);border-bottom:1px solid #ffffff10}.nav{width:min(1180px,92%);margin:auto;height:70px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px}.brand img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid var(--gold)}.brand b{font-size:15px}.brand small{display:block;color:#9c8e7d}.nav button{background:transparent;border:1px solid #ffffff18;color:#ddd;border-radius:10px;padding:9px 14px;cursor:pointer;font-family:inherit}
+.hero{min-height:720px;position:relative;display:flex;align-items:end;overflow:hidden;background:linear-gradient(180deg,#0002 25%,#080706 95%),url('assets/poster.jpg') center/cover}.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,transparent 0,#0002 45%,#000b 100%);pointer-events:none}.heroContent{position:relative;z-index:2;width:min(1180px,92%);margin:auto;padding:70px 0}.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid #d6ad6250;background:#17120ccc;color:var(--gold2);border-radius:100px;padding:8px 14px;font-size:13px}.hero h1{font-family:"Playfair Display",serif;font-size:clamp(46px,8vw,92px);line-height:1;margin:18px 0 12px;text-shadow:0 10px 45px #000}.hero h2{margin:0 0 20px;color:#e8c98e;font-size:24px;font-weight:500}.heroMeta{display:flex;gap:12px;flex-wrap:wrap}.pill{background:#0b0908b8;border:1px solid #ffffff18;padding:10px 15px;border-radius:12px;color:#eee}.cta{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}.primary{background:linear-gradient(135deg,#e6c37f,#b68537);color:#171006;border:0;padding:15px 28px;border-radius:13px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:0 10px 30px #0007}.secondary{background:#ffffff0b;color:#fff;border:1px solid #ffffff20;padding:14px 24px;border-radius:13px;font-weight:700;font-family:inherit;cursor:pointer}
+.container{width:min(1180px,92%);margin:0 auto}.section{padding:60px 0}.sectionTitle{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}.sectionTitle h2{font-size:30px;margin:0}.sectionTitle p{margin:5px 0;color:var(--muted)}
+.infoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.info{background:linear-gradient(180deg,#17120f,#100e0c);border:1px solid var(--line);border-radius:18px;padding:22px}.info .icon{font-size:25px}.info b{display:block;margin-top:8px}.info span{color:var(--muted);font-size:14px}
+.booking{display:grid;grid-template-columns:390px 1fr;gap:18px;align-items:start}.panel{background:linear-gradient(180deg,#17130f,#0f0d0b);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 60px #0004}.panel h3{margin-top:0}.field{margin:14px 0}.field label{display:block;color:#cfc2b2;margin-bottom:7px;font-size:14px}.field input,.field select{width:100%;background:#0b0a08;border:1px solid #403326;color:#fff;padding:13px 14px;border-radius:11px;font:inherit;outline:none}.field input:focus,.field select:focus{border-color:var(--gold)}
+.stage{width:70%;margin:4px auto 26px;background:linear-gradient(90deg,#5b3c18,#e0b35f,#5b3c18);height:44px;display:flex;align-items:center;justify-content:center;color:#211506;font-weight:900;letter-spacing:1px;border-radius:0 0 55% 55%;box-shadow:0 10px 35px #c58c3040}.seatMap{display:grid;grid-template-columns:repeat(12,1fr);gap:7px;direction:ltr}.seat{height:38px;border:1px solid #554331;background:#17130f;color:#d9c4a1;border-radius:7px;font-size:11px;cursor:pointer}.seat:hover:not(.sold){border-color:var(--gold);transform:translateY(-1px)}.seat.selected{background:linear-gradient(135deg,#e8c77f,#b37d30);color:#1b1005;border-color:#f5dba0;font-weight:900}.seat.sold{background:#4d2424;color:#9b7770;cursor:not-allowed;border-color:#673333}.seat.vip{box-shadow:inset 0 0 0 1px #7d5a27}.legend{display:flex;gap:18px;justify-content:center;margin-top:16px;color:#bcb1a5;font-size:12px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:5px;background:#17130f;border:1px solid #554331}.legend i.s{background:#d6ad62}.legend i.x{background:#4d2424}
+.summary{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}.sumrow{display:flex;justify-content:space-between;padding:6px 0;color:#d5ccc2}.total{font-size:21px;color:var(--gold2);font-weight:800}.priceCards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.priceCard{border:1px solid #4b3a28;background:#0d0b09;padding:12px;border-radius:12px;cursor:pointer}.priceCard.active{border-color:var(--gold);background:#21180e}.priceCard b{display:block}.priceCard span{color:var(--muted);font-size:12px}
+
+.steps{display:flex;gap:7px;margin-bottom:20px}.step{flex:1;text-align:center;padding:9px;border-bottom:2px solid #32271d;color:#777;font-size:12px}.step.active{border-color:var(--gold);color:var(--gold2)}
+.modal{position:fixed;inset:0;background:#000b;z-index:100;display:flex;align-items:center;justify-content:center;padding:18px}.modalBox{width:min(520px,100%);max-height:92vh;overflow:auto;background:#14110e;border:1px solid #493923;border-radius:22px;padding:24px;box-shadow:0 30px 100px #000}.modalHead{display:flex;justify-content:space-between;align-items:center}.close{background:none;border:0;color:#aaa;font-size:25px;cursor:pointer}.notice{padding:13px;background:#21180e;border:1px solid #5b4428;border-radius:12px;color:#dfc89f;font-size:13px;line-height:1.8}.paymentBox{background:#0c0b09;border:1px solid #3d3024;border-radius:14px;padding:15px;margin:12px 0}.paymentBox strong{color:var(--gold2);font-size:19px} .ticket{position:relative;width:100%;max-width:900px;aspect-ratio:1485/724;margin:auto;overflow:hidden;border-radius:8px;background:#10151b url("assets/ticket-bg-clean-v2.png") center/100% 100% no-repeat;box-shadow:0 20px 60px #0008;color:#f7e8bd}.ticketOverlay{position:absolute;inset:0;pointer-events:none}.ticketQr{position:absolute;left:79.0%;top:10.8%;width:12.2%;aspect-ratio:1/1;background:#fff;border-radius:4px;padding:.7%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;overflow:hidden}.ticketQr img,.ticketQr canvas{width:100%!important;height:100%!important;display:block}.ticketQr canvas{image-rendering:pixelated}.ticketField{position:absolute;left:76.8%;width:16.8%;text-align:center;font-weight:900;color:#f5d68d;text-shadow:0 2px 4px #000;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ticketSeat{top:46.0%;font-size:clamp(16px,2.15vw,28px);font-family:Georgia,serif}.ticketType{top:61.0%;font-size:clamp(14px,1.8vw,24px);font-family:Georgia,serif}.ticketName{top:76.5%;font-size:clamp(11px,1.35vw,18px)}.ticketId{top:90.0%;font-size:clamp(10px,1.15vw,16px)}.ticketDate,.ticketTime{display:none}.ticketEvent{position:absolute;left:36%;width:34%;text-align:center;color:#f8e5b5;text-shadow:0 2px 5px #000;font-weight:800}.ticketEventTitle{top:32.0%;font-size:clamp(15px,2vw,25px)}.ticketEventDate{top:42.0%;font-size:clamp(13px,1.7vw,22px)}.ticketEventTime{top:47.0%;font-size:clamp(12px,1.5vw,19px)}.ticketFooter{font-size:11px;color:#6d5d4c;text-align:center;margin-top:8px}
+.admin{min-height:100vh;background:#0b0907;padding-bottom:60px}.adminHead{padding:28px 0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#15120f;border:1px solid var(--line);border-radius:15px;padding:18px}.stat small{color:#999}.stat b{display:block;font-size:28px;color:var(--gold2);margin-top:5px}.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:12px;border-bottom:1px solid #ffffff0b;text-align:right}.table th{color:var(--gold2);background:#16120f}.tag{padding:4px 8px;border-radius:7px;font-size:11px;background:#254b38;color:#aee0c0}.adminActions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.scanner{max-width:500px;margin:25px auto;background:#15120f;border:1px solid var(--line);border-radius:18px;padding:22px;text-align:center}.scanner input{width:100%;padding:13px;background:#0c0a08;border:1px solid #423426;border-radius:10px;color:white;margin:8px 0;font:inherit}
+@media(max-width:900px){.booking{grid-template-columns:1fr}.infoGrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.seatMap{grid-template-columns:repeat(8,1fr)}}
+@media(max-width:520px){.hero{min-height:650px}.heroContent{padding-bottom:40px}.seatMap{grid-template-columns:repeat(6,1fr)}.stats{grid-template-columns:1fr}.priceCards{grid-template-columns:1fr}}
+
+@media print{
+  body.print-ticket *{visibility:hidden!important}
+  body.print-ticket #ticketModal,body.print-ticket #ticketModal *{visibility:visible!important}
+  body.print-ticket #ticketModal{position:absolute!important;inset:0!important;background:#fff!important;padding:0!important;display:block!important}
+  body.print-ticket #ticketModal .modalBox{position:absolute!important;left:50%!important;top:0!important;transform:translateX(-50%)!important;width:95vw!important;max-width:1100px!important;max-height:none!important;overflow:visible!important;background:#fff!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+  body.print-ticket #ticketModal .modalHead,body.print-ticket #ticketModal .modalBox>div:last-child{display:none!important}
+  body.print-ticket #ticketCard{display:block!important;width:100%!important;max-width:1100px!important;height:auto!important;aspect-ratio:1485/724!important;margin:0!important;box-shadow:none!important}
+  @page{size:landscape;margin:8mm}
+}
+</style>
+</head>
+<body>
+
+<div id="clientApp">
+<header class="topbar"><div class="nav">
+<div class="brand"><img src="assets/priest.jpg"><div><b>سلمنا فسرنا نحمل</b><small>أبونا چوزيف چون</small></div></div>
+<div><button onclick="scrollToBooking()">احجز الآن</button></div>
+</div></header>
+
+<section class="hero"><div class="heroContent">
+<div class="eyebrow">✦ حجز التذاكر أونلاين</div>
+<h1>سلمنا فسرنا نحمل</h1>
+<h2>مع أبونا چوزيف چون</h2>
+<div class="heroMeta"><div class="pill">📅 29 ديسمبر 2026</div><div class="pill">🕕 6:00 مساءً</div><div class="pill">🎟️ اختيار المقعد مسبقًا</div></div>
+<div class="cta"><button class="primary" onclick="scrollToBooking()">احجز تذكرتك الآن</button><button class="secondary" onclick="openAbout()">عن الحفل</button></div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="sectionTitle"><div><h2>تفاصيل الحفل</h2><p>كل ما تحتاجه قبل إتمام الحجز</p></div></div>
+<div class="infoGrid">
+<div class="info"><div class="icon">📅</div><b>التاريخ</b><span>الثلاثاء 29 ديسمبر 2026</span></div>
+<div class="info"><div class="icon">🕕</div><b>موعد البداية</b><span>الساعة 6:00 مساءً</span></div>
+<div class="info"><div class="icon">🎟️</div><b>تذكرة إلكترونية</b><span>ستحصل على QR Code خاص بك بعد الحجز</span></div>
+</div></div></section>
+
+<section id="booking" class="section"><div class="container">
+<div class="sectionTitle"><div><h2>احجز مكانك</h2><p>اختار التذكرة ثم المقعد المناسب لك</p></div></div>
+<div class="booking">
+<div class="panel">
+<h3>1 — بيانات الحجز</h3>
+<div class="field"><label>الاسم بالكامل</label><input id="name" placeholder="اكتب اسمك"></div>
+<div class="field"><label>رقم الموبايل</label><input id="phone" placeholder="01xxxxxxxxx" inputmode="tel"></div>
+<h3 style="margin-top:25px">نوع التذكرة</h3>
+<div class="priceCards">
+<div class="priceCard active" data-price="500" data-type="VIP" onclick="chooseType(this)"><b>VIP</b><span>500 جنيه — المقاعد الذهبية</span></div>
+<div class="priceCard" data-price="300" data-type="Regular" onclick="chooseType(this)"><b>Regular</b><span>300 جنيه — المقاعد العادية</span></div>
+</div>
+<div class="summary"><div class="sumrow"><span>المقاعد المختارة</span><b id="selectedText">—</b></div><div class="sumrow"><span>عدد التذاكر</span><b id="count">0</b></div><div class="sumrow total"><span>الإجمالي</span><span id="total">0 جنيه</span></div></div>
+<button class="primary" style="width:100%;margin-top:15px" onclick="goPayment()">متابعة الدفع</button>
+</div>
+
+<div class="panel">
+<h3>2 — اختار مقعدك</h3>
+<div class="stage">المسرح / STAGE</div>
+<div id="seatMap" class="seatMap"></div>
+<div class="legend"><span><i></i>متاح</span><span><i class="s"></i>مختار</span><span><i class="x"></i>محجوز</span></div>
+</div>
+</div></div></section>
+
+<section class="section"><div class="container"><div class="panel">
+<div class="sectionTitle"><div><h2>الدخول يوم الحفل</h2><p>اعرض الـ QR Code الخاص بك عند البوابة</p></div></div>
+<div class="infoGrid"><div class="info"><b>1. احجز</b><span>اختار المقاعد وأكمل بياناتك.</span></div><div class="info"><b>2. ادفع</b><span>InstaPay أو المحفظة الإلكترونية.</span></div><div class="info"><b>3. ادخل</b><span>اعرض QR Code ويتم التحقق منه عند الدخول.</span></div></div>
+</div></div></section>
+</div>
+
+<div id="paymentModal" class="modal hidden"><div class="modalBox">
+<div class="modalHead"><h2>إتمام الحجز</h2><button class="close" onclick="closeModal()">×</button></div>
+<div class="steps"><div class="step active">المقاعد</div><div class="step active">الدفع</div><div class="step">التذكرة</div></div>
+<div class="notice">هذه نسخة عرض للعميل. بيانات الدفع هنا تجريبية، لكن رحلة الحجز والـQR وشاشة الإدارة تعمل فعليًا داخل النموذج.</div>
+<div class="paymentBox"><div>المبلغ المطلوب</div><strong id="payAmount">0 جنيه</strong></div>
+<div class="field"><label>طريقة الدفع</label><select id="payMethod"><option value="InstaPay">InstaPay</option><option value="Wallet">محفظة إلكترونية</option></select></div>
+<div id="payDetails" class="paymentBox"></div>
+<div class="field"><label>رقم العملية / المرجع</label><input id="transaction" placeholder="مثال: 123456789"></div>
+<button class="primary" style="width:100%" onclick="confirmBooking()">تأكيد الدفع والحجز</button>
+</div></div>
+
+<div id="ticketModal" class="modal hidden"><div class="modalBox">
+<div class="modalHead"><h2>تم الحجز بنجاح ✓</h2><button class="close" onclick="closeTicket()">×</button></div>
+<div class="ticket" id="ticketCard">
+<div class="ticketOverlay">
+<div class="ticketQr" id="ticketQr" aria-label="QR Code"></div>
+<div class="ticketField ticketSeat" id="tSeats"></div>
+<div class="ticketField ticketType" id="tType"></div>
+<div class="ticketField ticketName" id="tName"></div>
+<div class="ticketField ticketId" id="tId"></div>
+</div>
+</div>
+<div style="margin-top:14px">
+<div style="font-size:13px;color:#6d5d4c;margin-bottom:8px;font-weight:700">تحميل التذكرة</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<button class="primary" style="width:100%;margin-top:0" onclick="printTicket()">تحميل PDF</button>
+<button class="secondary" style="width:100%" onclick="downloadTicket('png')">تحميل صورة</button>
+</div>
+<button class="secondary" style="width:100%;margin-top:10px" onclick="printTicket()">طباعة التذكرة</button>
+</div>
+</div></div>
+
+<div id="adminApp" class="admin hidden">
+<div class="container adminHead">
+<div class="sectionTitle"><div><h1>لوحة إدارة الحفل</h1><p>سلمنا فسرنا نحمل — إدارة الحجوزات والتذاكر</p></div><button class="secondary" onclick="showClient()">← الموقع</button></div>
+<div class="stats"><div class="stat"><small>الحجوزات</small><b id="aBookings">0</b></div><div class="stat"><small>التذاكر</small><b id="aTickets">0</b></div><div class="stat"><small>المقاعد المتاحة</small><b id="aAvailable">0</b></div><div class="stat"><small>الإيراد التجريبي</small><b id="aRevenue">0</b></div></div>
+<div class="adminActions"><button class="primary" onclick="exportExcel()">تحميل Excel</button><button class="secondary" onclick="clearDemo()">مسح حجوزات الديمو</button></div>
+<div class="panel"><h3>الحجوزات</h3><div class="tableWrap"><table class="table"><thead><tr><th>رقم الحجز</th><th>الاسم</th><th>الموبايل</th><th>المقاعد</th><th>الدفع</th><th>الحالة</th></tr></thead><tbody id="bookingTable"></tbody></table></div></div>
+<div class="scanner"><h3>🎟️ تجربة Check-in</h3><p style="color:#999">الصق QR Token من التذكرة لاختبار منع الدخول مرتين.</p><input id="scanToken" placeholder="QR Token"><button class="primary" style="width:100%" onclick="checkin()">تحقق من التذكرة</button><p id="scanResult"></p></div>
+</div></div>
+
+<script>
+const PRICE={VIP:500,Regular:300};let selected=new Set(),ticketType="VIP",bookings=JSON.parse(localStorage.getItem("sjBookings")||"[]");
+const seats=Array.from("ABCDEFGH").flatMap(r=>Array.from({length:12},(_,i)=>r+String(i+1).padStart(2,"0")));
+function save(){localStorage.setItem("sjBookings",JSON.stringify(bookings))}
+function bookedSet(){return new Set(bookings.filter(b=>b.status!=="CANCELLED").flatMap(b=>b.seats))}
+function renderSeats(){let box=document.getElementById("seatMap");box.innerHTML="";let booked=bookedSet();seats.forEach(s=>{let b=document.createElement("button");b.className="seat"+(booked.has(s)?" sold":"")+(selected.has(s)?" selected":"");b.textContent=s;b.disabled=booked.has(s);if(!b.disabled)b.onclick=()=>toggleSeat(s);box.appendChild(b)})}
+function toggleSeat(s){selected.has(s)?selected.delete(s):selected.add(s);renderSeats();updateSummary()}
+function chooseType(el){document.querySelectorAll(".priceCard").forEach(x=>x.classList.remove("active"));el.classList.add("active");ticketType=el.dataset.type;updateSummary()}
+function updateSummary(){document.getElementById("selectedText").textContent=[...selected].join(", ")||"—";document.getElementById("count").textContent=selected.size;document.getElementById("total").textContent=(selected.size*PRICE[ticketType]).toLocaleString("ar-EG")+" جنيه"}
+function scrollToBooking(){document.getElementById("booking").scrollIntoView({behavior:"smooth"})}
+function openAbout(){document.getElementById("booking").scrollIntoView({behavior:"smooth"})}
+function goPayment(){let n=document.getElementById("name").value.trim(),p=document.getElementById("phone").value.trim();if(!n||!p||!selected.size){alert("من فضلك اكتب الاسم ورقم الموبايل واختار مقعدًا.");return}document.getElementById("payAmount").textContent=(selected.size*PRICE[ticketType]).toLocaleString("ar-EG")+" جنيه";updatePayDetails();document.getElementById("paymentModal").classList.remove("hidden")}
+function updatePayDetails(){let m=document.getElementById("payMethod").value;document.getElementById("payDetails").innerHTML=m==="InstaPay"?"<b>InstaPay</b><br><span style='color:#aaa'>سيظهر هنا حساب الحفل/QR الدفع في النسخة الإنتاجية.</span>":"<b>محفظة إلكترونية</b><br><span style='color:#aaa'>سيظهر هنا رقم المحفظة في النسخة الإنتاجية.</span>"}
+document.getElementById("payMethod").onchange=updatePayDetails;
+function closeModal(){document.getElementById("paymentModal").classList.add("hidden")}
+function confirmBooking(){let tx=document.getElementById("transaction").value.trim();if(!tx){alert("اكتب رقم العملية التجريبي.");return}let token=(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2))+"-"+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));let id="SJ-"+Math.random().toString(36).slice(2,10).toUpperCase();let b={id,name:document.getElementById("name").value.trim(),phone:document.getElementById("phone").value.trim(),seats:[...selected],type:ticketType,total:selected.size*PRICE[ticketType],method:document.getElementById("payMethod").value,transaction:tx,status:"CONFIRMED",token,created:new Date().toLocaleString("ar-EG")};bookings.push(b);save();closeModal();document.getElementById("tName").textContent=b.name;document.getElementById("tSeats").textContent=b.seats.join(" • ");document.getElementById("tType").textContent=b.type==="VIP"?"VIP":"REGULAR";document.getElementById("tId").textContent="#"+b.id;let qr=document.getElementById("ticketQr");qr.innerHTML="";new QRCode(qr,{text:JSON.stringify({bookingId:b.id,token:b.token,seats:b.seats}),width:180,height:180,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});document.getElementById("ticketModal").classList.remove("hidden");selected=new Set();renderSeats();updateSummary()}
+function closeTicket(){document.getElementById("ticketModal").classList.add("hidden")}
+
+function printTicket(){
+  const ticket=document.getElementById("ticketCard");
+  if(!ticket){ alert("التذكرة غير متاحة."); return; }
+  document.body.classList.add("print-ticket");
+  // Give the browser one frame to apply print CSS, then open the native print dialog.
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      window.print();
+      setTimeout(function(){ document.body.classList.remove("print-ticket"); }, 1000);
+    });
+  });
+}
+
+async function downloadTicket(format="png"){
+  const ticket=document.getElementById("ticketCard");
+  if(!ticket){ alert("التذكرة غير متاحة."); return; }
+  const clicked=(typeof event!=="undefined" && event && event.target) ? event.target : null;
+  const originalText=clicked ? clicked.textContent : "";
+  if(clicked){ clicked.disabled=true; clicked.textContent="جاري التجهيز..."; }
+  try{
+    const bookingId=document.getElementById("tId").textContent.replace(/^#/,'') || "ticket";
+    const canvas=await html2canvas(ticket,{backgroundColor:null,scale:2,useCORS:true,allowTaint:true,logging:false});
+    const dataUrl=canvas.toDataURL("image/png");
+    const link=document.createElement("a");
+    link.download="ticket-"+bookingId+".png";
+    link.href=dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }catch(e){
+    console.error(e);
+    alert("حصلت مشكلة أثناء تجهيز صورة التذكرة. جرّب مرة أخرى.");
+  }finally{
+    if(clicked){ clicked.disabled=false; clicked.textContent=originalText; }
+  }
+}
+
+function showClient(){document.getElementById("adminApp").classList.add("hidden");document.getElementById("clientApp").classList.remove("hidden")}
+function renderAdmin(){let tb=document.getElementById("bookingTable");tb.innerHTML="";bookings.forEach(b=>{let tr=document.createElement("tr");tr.innerHTML=`<td>${b.id}</td><td>${b.name}</td><td>${b.phone}</td><td>${b.seats.join(", ")}</td><td>${b.method}<br><small>${b.transaction}</small></td><td><span class="tag">${b.status}</span></td>`;tb.appendChild(tr)});document.getElementById("aBookings").textContent=bookings.length;document.getElementById("aTickets").textContent=bookings.reduce((a,b)=>a+b.seats.length,0);document.getElementById("aAvailable").textContent=seats.length-bookedSet().size;document.getElementById("aRevenue").textContent=bookings.reduce((a,b)=>a+b.total,0).toLocaleString("ar-EG")+" ج"}
+function exportExcel(){if(typeof XLSX==="undefined"){alert("افتح الموقع مع اتصال بالإنترنت لتفعيل تصدير Excel.");return}let rows=bookings.map(b=>({"رقم الحجز":b.id,"الاسم":b.name,"الموبايل":b.phone,"المقاعد":b.seats.join(", "),"نوع التذكرة":b.type,"الإجمالي":b.total,"طريقة الدفع":b.method,"رقم العملية":b.transaction,"الحالة":b.status,"وقت الحجز":b.created}));let ws=XLSX.utils.json_to_sheet(rows);let wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Bookings");XLSX.writeFile(wb,"سلمنا-فسرنا-نحمل-الحجوزات.xlsx")}
+function clearDemo(){if(confirm("مسح كل حجوزات الديمو؟")){bookings=[];save();renderSeats();renderAdmin()}}
+function checkin(){let t=document.getElementById("scanToken").value.trim(),b=bookings.find(x=>x.token===t);let out=document.getElementById("scanResult");if(!b){out.textContent="❌ التذكرة غير موجودة";out.style.color="#e99"}else if(b.status==="USED"){out.textContent="❌ التذكرة مستخدمة بالفعل";out.style.color="#e99"}else{b.status="USED";save();renderAdmin();out.textContent="✓ دخول مسموح — "+b.name+" — "+b.seats.join(", ");out.style.color="#9de0b4"}}
+if(location.search.includes("admin"))showAdmin();renderSeats();updateSummary();
+</script>
+</body></html>
